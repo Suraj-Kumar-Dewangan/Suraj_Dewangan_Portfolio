@@ -18,7 +18,7 @@ Welcome to my captivating 3D portfolio website! Harnessing the power of cutting-
 - **Optimized Performance**: Employ Suspense and Preload techniques to deliver a blazing-fast user experience.
 
 ## 🌐 Live Demo
-Experience it in action! Check out the <a href="https://your-portfolio-url.netlify.app/" target="_blank">Live Demo</a> *(update this link once deployed)*.
+Experience it in action! Check out the <a href="https://suraj3dportfolio.netlify.app/" target="_blank">Live Demo</a>.
 
 
 ## 🛠️ Usage
