@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { styles } from "../styles";
 import { ComputersCanvas } from "./canvas";
 import { motion } from "framer-motion";
 import { personalInfo } from "../constants";
 
 const Hero = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   return (
     <section className="relative w-full h-screen mx-auto bg-primary">
       {/* Text content — z-10 keeps it above the canvas layer */}
@@ -29,10 +39,12 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* 3D Computer model — behind text */}
-      <div className="absolute inset-0 w-full h-full">
-        <ComputersCanvas />
-      </div>
+      {/* 3D Computer model — hidden on mobile to prevent WebGL memory issues */}
+      {!isMobile && (
+        <div className="absolute inset-0 w-full h-full">
+          <ComputersCanvas />
+        </div>
+      )}
 
       {/* Scroll indicator */}
       <div className="absolute xs:bottom-2 bottom-12 w-full flex justify-center items-center z-10">

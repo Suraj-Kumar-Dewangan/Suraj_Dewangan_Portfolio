@@ -1,9 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { technologies } from "../constants";
 import { BallCanvas } from "./canvas";
+import ErrorBoundary from "./ErrorBoundary";
 
 const Tech = () => {
   const [toottipTexts, setTooltipTexts] = useState({});
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   const handleMouseEnter = (index, technology) => {
     setTooltipTexts({ [index]: technology });
@@ -22,11 +32,28 @@ const Tech = () => {
           onMouseEnter={() => handleMouseEnter(index, technology.name)}
           onMouseLeave={handleMouseLeave}
         >
-          <div>
-            <BallCanvas icon={technology.icon} />
-          </div>
+          {isMobile ? (
+            <div className="w-full h-full flex flex-col items-center justify-center">
+              <img
+                src={technology.icon}
+                alt={technology.name}
+                className="w-16 h-16 object-contain"
+              />
+              <p className="text-secondary text-xs mt-1 text-center">{technology.name}</p>
+            </div>
+          ) : (
+            <ErrorBoundary
+              fallback={
+                <div className="w-full h-full flex items-center justify-center">
+                  <img src={technology.icon} alt={technology.name} className="w-16 h-16 object-contain" />
+                </div>
+              }
+            >
+              <BallCanvas icon={technology.icon} />
+            </ErrorBoundary>
+          )}
 
-          {toottipTexts[index] && (
+          {!isMobile && toottipTexts[index] && (
             <div className="absolute bg-black bg-opacity-80 text-white px-2 py-1 rounded text-sm z-10 bottom-[90%] left-1/2 transform -translate-x-1/2 whitespace-nowrap">
               {toottipTexts[index]}
             </div>

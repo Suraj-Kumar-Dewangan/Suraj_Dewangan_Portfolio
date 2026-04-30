@@ -31,30 +31,35 @@ const Computers = ({ isMobile }) => {
 
 const ComputersCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [isTabletOrSmaller, setIsTabletOrSmaller] = useState(false);
 
   useEffect(() => {
-    // Add a listener for changes to the screen size
-    const mediaQuery = window.matchMedia("(max-width: 500px)");
-    setIsMobile(mediaQuery.matches);
+    const mobileQuery = window.matchMedia("(max-width: 500px)");
+    const tabletQuery = window.matchMedia("(max-width: 768px)");
 
-    const handleMediaQueryChange = (event) => {
-      setIsMobile(event.matches);
-    };
-    // Add the callback function as a listener for changes to the media query
-    mediaQuery.addEventListener("change", handleMediaQueryChange);
+    setIsMobile(mobileQuery.matches);
+    setIsTabletOrSmaller(tabletQuery.matches);
 
-    // Remove the listener when the component is unmounted
+    const handleMobileChange = (e) => setIsMobile(e.matches);
+    const handleTabletChange = (e) => setIsTabletOrSmaller(e.matches);
+
+    mobileQuery.addEventListener("change", handleMobileChange);
+    tabletQuery.addEventListener("change", handleTabletChange);
+
     return () => {
-      mediaQuery.removeEventListener("change", handleMediaQueryChange);
+      mobileQuery.removeEventListener("change", handleMobileChange);
+      tabletQuery.removeEventListener("change", handleTabletChange);
     };
   }, []);
 
+  if (isTabletOrSmaller) return null;
+
   return (
     <Canvas
-      frameloop="always"
+      frameloop="demand"
       shadows
       camera={{ position: [20, 3, 5], fov: 25 }}
-      gl={{ preserveDrawingBuffer: true, alpha: true }}
+      gl={{ preserveDrawingBuffer: true, alpha: true, antialias: false }}
       style={{ background: "transparent", width: "100%", height: "100%" }}
       onCreated={({ gl, scene }) => {
         gl.setClearColor(0x000000, 0);

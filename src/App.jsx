@@ -8,6 +8,7 @@ import Works from "./components/Works";
 import Contact from "./components/Contact";
 import { StarsCanvas } from "./components/canvas";
 import HireMe from "./components/HireMe";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const App = () => {
   return (
@@ -15,14 +16,20 @@ const App = () => {
       <div className="relative z-0 bg-primary">
         <div className="bg-hero-pattern bg-cover bg-no-repeat bg-center">
           <Navbar />
-          <Hero />
+          <ErrorBoundary>
+            <Hero />
+          </ErrorBoundary>
         </div>
         <About />
         <Experience />
-        <Tech />
+        <ErrorBoundary>
+          <Tech />
+        </ErrorBoundary>
         <Works />
         <div className="relative z-0">
-          <Contact />
+          <ErrorBoundary>
+            <Contact />
+          </ErrorBoundary>
           {/* <StarsCanvas /> */}
         </div>
         <HireMe />

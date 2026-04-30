@@ -235,7 +235,7 @@ const publicUrls = {
   socialProfiles: {
     linkedin: {
       title: "linkedin",
-      link: "ADD_YOUR_LINKEDIN_LINK",
+      link: "https://www.linkedin.com/in/suraj-kumar-dewangan-683717219/",
       icon: linkedIn,
     },
     github: {
