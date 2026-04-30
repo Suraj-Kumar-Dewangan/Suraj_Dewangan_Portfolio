@@ -5,7 +5,9 @@ import { motion } from "framer-motion";
 import { personalInfo } from "../constants";
 
 const Hero = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia("(max-width: 768px)").matches
+  );
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");

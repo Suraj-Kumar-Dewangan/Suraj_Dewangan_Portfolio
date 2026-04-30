@@ -30,8 +30,12 @@ const Computers = ({ isMobile }) => {
 };
 
 const ComputersCanvas = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isTabletOrSmaller, setIsTabletOrSmaller] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia("(max-width: 500px)").matches
+  );
+  const [isTabletOrSmaller, setIsTabletOrSmaller] = useState(
+    () => window.matchMedia("(max-width: 768px)").matches
+  );
 
   useEffect(() => {
     const mobileQuery = window.matchMedia("(max-width: 500px)");

@@ -5,7 +5,9 @@ import ErrorBoundary from "./ErrorBoundary";
 
 const Tech = () => {
   const [toottipTexts, setTooltipTexts] = useState({});
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia("(max-width: 768px)").matches
+  );
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
@@ -33,13 +35,13 @@ const Tech = () => {
           onMouseLeave={handleMouseLeave}
         >
           {isMobile ? (
-            <div className="w-full h-full flex flex-col items-center justify-center">
+            <div className="w-full h-full flex flex-col items-center justify-center bg-tertiary rounded-2xl p-2 shadow-card">
               <img
                 src={technology.icon}
                 alt={technology.name}
-                className="w-16 h-16 object-contain"
+                className="w-12 h-12 object-contain"
               />
-              <p className="text-secondary text-xs mt-1 text-center">{technology.name}</p>
+              <p className="text-secondary text-[10px] mt-1 text-center leading-tight">{technology.name}</p>
             </div>
           ) : (
             <ErrorBoundary
