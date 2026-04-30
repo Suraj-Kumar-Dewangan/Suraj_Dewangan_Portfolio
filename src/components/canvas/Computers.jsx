@@ -10,18 +10,20 @@ const Computers = ({ isMobile }) => {
     <mesh>
       <hemisphereLight intensity={0.15} groundColor="black" />
       <pointLight intensity={1} />
-      <spotLight
-        visible
-        position={[-20, 50, 10]}
-        angle={0.12}
-        intensity={1}
-        penumbra={1}
-        castShadow
-        shadow-mapSize={1024}
-      />
+      {!isMobile && (
+        <spotLight
+          visible
+          position={[-20, 50, 10]}
+          angle={0.12}
+          intensity={1}
+          penumbra={1}
+          castShadow
+          shadow-mapSize={1024}
+        />
+      )}
       <primitive
         object={computer.scene}
-        scale={isMobile ? 0.65 : 0.75}
+        scale={isMobile ? 0.55 : 0.75}
         position={isMobile ? [0, -3, -2.2] : [0, -3.25, -1.5]}
         rotation={[-0.01, -0.2, -0.1]}
       />
@@ -31,39 +33,29 @@ const Computers = ({ isMobile }) => {
 
 const ComputersCanvas = () => {
   const [isMobile, setIsMobile] = useState(
-    () => window.matchMedia("(max-width: 500px)").matches
-  );
-  const [isTabletOrSmaller, setIsTabletOrSmaller] = useState(
     () => window.matchMedia("(max-width: 768px)").matches
   );
 
   useEffect(() => {
-    const mobileQuery = window.matchMedia("(max-width: 500px)");
-    const tabletQuery = window.matchMedia("(max-width: 768px)");
-
-    setIsMobile(mobileQuery.matches);
-    setIsTabletOrSmaller(tabletQuery.matches);
-
-    const handleMobileChange = (e) => setIsMobile(e.matches);
-    const handleTabletChange = (e) => setIsTabletOrSmaller(e.matches);
-
-    mobileQuery.addEventListener("change", handleMobileChange);
-    tabletQuery.addEventListener("change", handleTabletChange);
-
-    return () => {
-      mobileQuery.removeEventListener("change", handleMobileChange);
-      tabletQuery.removeEventListener("change", handleTabletChange);
-    };
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
   }, []);
-
-  if (isTabletOrSmaller) return null;
 
   return (
     <Canvas
       frameloop="demand"
-      shadows
+      shadows={!isMobile}
+      dpr={isMobile ? 1 : [1, 2]}
       camera={{ position: [20, 3, 5], fov: 25 }}
-      gl={{ preserveDrawingBuffer: true, alpha: true, antialias: false }}
+      gl={{
+        preserveDrawingBuffer: true,
+        alpha: true,
+        antialias: false,
+        powerPreference: isMobile ? "low-power" : "high-performance",
+      }}
       style={{ background: "transparent", width: "100%", height: "100%" }}
       onCreated={({ gl, scene }) => {
         gl.setClearColor(0x000000, 0);
@@ -71,7 +63,7 @@ const ComputersCanvas = () => {
         scene.background = null;
       }}
     >
-      <Suspense fallback={null}>
+      <Suspense fallback={<CanvasLoader />}>
         <OrbitControls
           autoRotate
           autoRotateSpeed={5}
